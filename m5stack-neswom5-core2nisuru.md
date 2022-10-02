@@ -1,5 +1,12 @@
 # M5Stack NESをM5 Core2に移植する
 
+## TL;DR
+
+M5Stack Core2でファミコン(NES)エミュレータを動かしたい。\
+移植元がESP-IDF前提なので、勉強がてら動かしたい。
+
+
+
 ## 移植元の情報
 
 M5Stack NESエミュレータ [https://github.com/m5stack/M5Stack-nesemu.git](https://github.com/m5stack/M5Stack-nesemu.git)\
