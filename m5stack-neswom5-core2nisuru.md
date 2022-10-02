@@ -26,12 +26,11 @@ PMU(Power Management Unit): AXP192が追加されている。I2Cで制御する�
 さらに静電タッチIC: T6336Uも追加されている。これらは下記I2Cでつながっている。\
 RTC(Real Time Clock): BM8563, IMU(ジャイロ・加速度センサー): MPU6886は未調査​
 
-<figure><img src=".gitbook/assets/i2c.png" alt=""><figcaption></figcaption></figure>
+![i2c.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/192305/c973483f-1849-83eb-c87a-56adeefbe6a0.png)
 
 さらにスピーカーは外付けDAC：NS4168になっている。これはI2S制御。  
 
-<figure><img src=".gitbook/assets/dac.png" alt=""><figcaption></figcaption></figure>
-
+![dac.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/192305/7f7df4a5-6702-e4e0-3542-fc84c94b3e7b.png)
 
 
 元のNESエミュレータはメーカー（Espressif）が公開しているものがベースになっているが、\
@@ -60,9 +59,9 @@ $ cd m5core2_esp-idf_demo
 $ idf.py build flash monitor
 ```
 
-動作確認してみたがタッチが聞かない。おかしい。\
-ESP\_LOGI()を埋め込んでデバッグする。どうもI2Cでタッチはきているが値が無茶苦茶である。\
-下記バースト転送に問題がありそうだ。正直波形を見ないとわからない。
+動作確認してみたがタッチが効かない。おかしい。\
+ESP\_LOGI()を埋め込んでデバッグする。どうもI2Cでタッチ通知はきているが値が無茶苦茶である。\
+下記バースト転送に問題がありそうだ。正直波形を見ないとわからないがなまっているのか？
 
 ```
 lvgl_touch/ft6x36.c
@@ -70,7 +69,8 @@ lvgl_touch/ft6x36.c
 esp_err_t ret = lvgl_i2c_read(CONFIG_LV_I2C_TOUCH_PORT, current_dev_addr, FT6X36_TD_STAT_REG, &data_buf[0], 5);
 ```
 
-個別でリードするように修正。とりあえずforkしてパッチを充てた。[https://github.com/HidetoKimura/lvgl\_esp32\_drivers/commit/c3527874132d70ca9c0f4f17dec265c072b6e7bd](https://github.com/HidetoKimura/lvgl\_esp32\_drivers/commit/c3527874132d70ca9c0f4f17dec265c072b6e7bd)\
+個別でリードするように修正。とりあえずforkしてパッチを充てた。 
+[https://github.com/HidetoKimura/lvgl\_esp32\_drivers/commit/c3527874132d70ca9c0f4f17dec265c072b6e7bd](https://github.com/HidetoKimura/lvgl\_esp32\_drivers/commit/c3527874132d70ca9c0f4f17dec265c072b6e7bd)
 
 
 タッチも動いたのでここにNESエミュレータ(nofrendo)をぶち込む。\
@@ -85,7 +85,7 @@ esp_err_t ret = lvgl_i2c_read(CONFIG_LV_I2C_TOUCH_PORT, current_dev_addr, FT6X36
 $ idf.py menuconfig
 ```
 
-<figure><img src=".gitbook/assets/menuconfig.png" alt=""><figcaption></figcaption></figure>
+![menuconfig.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/192305/0dc081fd-635e-385a-8127-78b5668fccf3.png)
 
 パーティションテーブルを有効化する。0x100000にNESのロムは置く。あとはLCDのポートをM5 Core2にあわせて直す。
 
@@ -191,7 +191,7 @@ components/nofrendo-esp32/spi_lcd.c
 画面を九分割して下記のように割り当てる。あとはエリア判定してイベントを通知する。\
 既存の処理をパクリながらイベント通知は実装。
 
-<figure><img src=".gitbook/assets/controller.drawio.png" alt=""><figcaption></figcaption></figure>
+![controller.drawio.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/192305/7e8d6bda-794d-08ac-0f16-d27fde1c7c7b.png)
 
 最後に音を出す。内蔵DACが外付けになっているので、ちょっと初期化を修正。
 
@@ -236,12 +236,10 @@ do_audio_frame() {
 
 めでたくゲームができるレベルにはなりました。
 
-<figure><img src=".gitbook/assets/core2.jpg" alt=""><figcaption></figcaption></figure>
+![core2.jpg](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/192305/12f6693e-e71e-594f-d173-315f51c85865.jpeg)
 
-\
 ちょっとまだ要調査のところは残っていますが、PoCとしては十分かと。\
-[\
-https://github.com/HidetoKimura/m5core2\_esp-idf\_nesemu](https://github.com/HidetoKimura/m5core2\_esp-idf\_nesemu)
+[https://github.com/HidetoKimura/m5core2\_esp-idf\_nesemu](https://github.com/HidetoKimura/m5core2\_esp-idf\_nesemu)
 
 ```
 $ git clone -b v4.3.4 --recursive https://github.com/espressif/esp-idf.git esp-idf-v4.3.4
