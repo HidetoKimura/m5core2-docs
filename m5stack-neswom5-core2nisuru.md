@@ -2,7 +2,7 @@
 
 ## TL;DR
 
-M5Stack Core2でファミコン(NES)エミュレータを動かしたい。\
+M5Stack Core2でファミコン(NES)エミュレータを動かしたい。  
 移植元がESP-IDF前提なので、勉強がてら動かしたい。
 
 
@@ -20,7 +20,6 @@ M5Core2 on ESP-ADF(No Arduino) [https://github.com/ropg/m5core2\_adf](https://gi
 M5 Core2: [http://docs.m5stack.com/en/core/core2](http://docs.m5stack.com/en/core/core2)\
 M5 Stack: [https://docs.m5stack.com/en/core/basic](https://docs.m5stack.com/en/core/basic)
 
-\
 回路図を眺めてみる。コアのESP32コアは一緒。\
 PMU(Power Management Unit): AXP192が追加されている。I2Cで制御する模様。\
 これらでLCDとか周辺機器の電源やリセットを制御してあげないとうんともすんとも言わない。\
@@ -29,8 +28,7 @@ RTC(Real Time Clock): BM8563, IMU(ジャイロ・加速度センサー): MPU6886
 
 <figure><img src=".gitbook/assets/i2c.png" alt=""><figcaption></figcaption></figure>
 
-さらにスピーカーは外付けDAC：NS4168になっている。これはI2S制御。\
-
+さらにスピーカーは外付けDAC：NS4168になっている。これはI2S制御。  
 
 <figure><img src=".gitbook/assets/dac.png" alt=""><figcaption></figcaption></figure>
 
